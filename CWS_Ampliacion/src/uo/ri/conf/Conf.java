@@ -1,0 +1,42 @@
+package uo.ri.conf;
+
+import java.io.IOException;
+import java.util.Properties;
+
+public class Conf {
+	private Properties props;
+	private static Conf instance = null;//Patrón singleton, para que no se puedan crear más instancias
+	private static final String FILE_CONF = "configuration.properties";
+
+	//(Mejor privado el constructor)
+	private Conf() {
+		this.props = new Properties();
+		try {
+			props.load(Conf.class.getClassLoader().getResourceAsStream(FILE_CONF));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			throw new RuntimeException("File properties cannot be loaded",e);
+		}
+		
+	}
+	
+	/*
+	 * Si existe la instancia la devuelve y sino la crea
+	 */
+	public static Conf getInstance() {
+		if (instance == null) {
+			instance = new Conf();
+		}
+		return instance;
+	}
+	
+	public String getProperty(String key) {
+		String value = props.getProperty(key);
+		if (value == null) {
+			throw new RuntimeException("Property not found in config file");
+		}
+		return value;
+	}
+	
+
+}
